@@ -54,7 +54,6 @@ const storeCommentTwit = expressAsyncHandler(async (req,res)=>{
 const getCommentTwit = expressAsyncHandler(async (req,res)=>{
     const comments = await commentTwitModel.find({byUser:decodeToken(req.header('Authorization')).id,twitId: req.params.id}).populate({path:'byUser',select:'profile_img name username'})
     return res.send(comments)
-
 })
 
 const storeReTwit = expressAsyncHandler(async (req,res)=>{
