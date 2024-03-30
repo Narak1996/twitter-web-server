@@ -5,9 +5,13 @@ const {loginValidate} = require("../validators/auth");
 const {validateHandleError} = require("../middleware/auth");
 const router = express.Router()
 require('../auth/googleStrategy')
+const {validateUser} = require("../validators/user");
+const {store} = require("../controllers/userController");
 
 
 router.post('/login', loginValidate, validateHandleError, login)
+
+router.post('/register',validateUser,validateHandleError,store)
 
 router.get('/google-login',passport.authenticate('google', {scope:['email', 'profile']}));
 router.get( '/google/callback',
