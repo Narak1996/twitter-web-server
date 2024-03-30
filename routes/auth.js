@@ -8,7 +8,6 @@ require('../auth/googleStrategy')
 const {validateUser} = require("../validators/user");
 const {store} = require("../controllers/userController");
 
-
 router.post('/login', loginValidate, validateHandleError, login)
 
 router.post('/register',validateUser,validateHandleError,store)
