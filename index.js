@@ -27,7 +27,9 @@ app.use(session({
     cookie: { secure: false }
 }))
 app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.session({
+    secret: 'express-session-secret'
+}))
 app.use(morgan('combined'))
 app.use(cors())
 app.use(bodyParser.json())

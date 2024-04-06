@@ -6,6 +6,9 @@ const axios = require("axios");
 const login = expressAsyncHandler(async (req, res) => {
     const user = await userModel.findOne({username: req.body.username})
     const token = signToken(user)
+    req.session.auth_token = token;
+    console.log(req.session.auth_token)
+
     res.status(200).json({token})
 })
 
@@ -24,8 +27,6 @@ const googleCallback = (async (req, res) => {
         grant_type: "authorization_code"
     })
     const {access_token,id_token} = data
-    console.log(access_token,id_token)
-
     const response = await axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
         headers: { Authorization: `Bearer ${access_token}` }
     })
@@ -44,6 +45,7 @@ const googleCallback = (async (req, res) => {
     })
     const result = await newUser.save()
     const token = signToken(result)
+    req.session.auth_token = token;
     return res.json({ token: token })
 })
 

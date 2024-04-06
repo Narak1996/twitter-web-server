@@ -12,12 +12,12 @@ const userSchema = new schema({
     bio:{type:String},
     password:String,
     profile_img:String,
-    followings:[{type:mongoose.Types.ObjectId,ref:'users'}],
-    followers:[{type:mongoose.Types.ObjectId,ref:'users'}],
-    twits:[{type:mongoose.Types.ObjectId,ref:'twits'}],
+    followings:[{type:mongoose.Types.ObjectId,ref:'User'}],
+    followers:[{type:mongoose.Types.ObjectId,ref:'User'}],
+    twits:[{type:mongoose.Types.ObjectId,ref:'Twit'}],
 })
 
 
-const userModel = mongoose.model('users',userSchema)
+const userModel = mongoose.model('User',userSchema)
 
 module.exports = {userSchema,userModel}
