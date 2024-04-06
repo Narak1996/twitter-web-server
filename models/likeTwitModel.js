@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const likeSchema = new mongoose.Schema({
-    twitId: {type: mongoose.Types.ObjectId, ref: 'twits'},
-    byUser: {type: mongoose.Types.ObjectId, ref: 'users'}
+    twitId: {type: mongoose.Types.ObjectId, ref: 'Twit'},
+    byUser: {type: mongoose.Types.ObjectId, ref: 'User'}
 })
 
-const likeTwitModel = mongoose.model('like_twit', likeSchema)
+const likeTwitModel = mongoose.model('LikeTwit', likeSchema)
 module.exports = {likeTwitModel}
