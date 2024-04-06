@@ -11,6 +11,15 @@
       steps:
         - name: Checkout
           uses: action/checkout@4
+          with:
+           submodules: 'recursive'
+        - name: Setup node
+          uses: actions/setup-node@v3
+          with:
+            node-version:'18'
+        - name: Install Backend dependencies
+          run: npm install
+
         - name: DigitalOcean App Platform deployment
           uses: digitalocean/app_action@v1.1.5
           with:
