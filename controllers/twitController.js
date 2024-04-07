@@ -3,6 +3,9 @@ const {twitModel} = require("../models/twitModel");
 const {decodeToken} = require("../helper/helper");
 const {likeTwitModel} = require("../models/likeTwitModel");
 const {commentTwitModel} = require("../models/commentTwitModel");
+const path = require("path");
+const multer = require('multer')
+const fs = require("fs");
 
 const index = expressAsyncHandler(async (req, res) => {
     const auth_id = decodeToken(req.header('Authorization')).id
@@ -14,12 +17,23 @@ const index = expressAsyncHandler(async (req, res) => {
 })
 const store = expressAsyncHandler(async (req, res) => {
     let obj = req.body
-    const user = decodeToken(req.header('Authorization'))
-    obj.byUser = user.id
-    obj.image = user.profile_img
+    const user = decodeToken(req.header('Authorization')).id
+
+
+    obj.byUser = user
+
+    console.log('======================================================')
+    console.log(obj)
+    console.log(req.file)
+    console.log('======================================================')
+    if(req.file) {
+        obj.image = req.file.path
+    }
+
     obj.likes = []
     obj.createdDate = new Date();
     const twit = new twitModel(req.body)
+
     await twit.save()
     res.send(twit)
 })
@@ -84,33 +98,29 @@ const storeReTwit = expressAsyncHandler(async (req, res) => {
 const likeTwit = expressAsyncHandler(async (req, res) => {
     const byUser = decodeToken(req.header('Authorization')).id
 
-    const twit = await twitModel.find({_id:req.params.id})
-    console.log(twit)
-    // twit.likes.push({byUser})
+    const twit = await twitModel.find({_id: req.params.id})
 
-    await twit.save()
-    return res.json(twit);
     const my_param = {byUser: user.id, twitId: twit._id}
 
     const check_like = await likeTwitModel.find(my_param)
 
     let number_of_likes = twit.number_of_likes
-    let likeBy = twit.likeBy
     let liked = true
+
+
     if (check_like.length) {
         number_of_likes--
         liked = false
-        likeBy.splice(user.id, 1)
+        twit.likes.splice({byUser}, 1)
         await likeTwitModel.deleteMany(my_param)
     } else {
         const likeTwit = new likeTwitModel(my_param)
         await likeTwit.save()
-        likeBy.push(user.id)
+        twit.likes.push({byUser})
         number_of_likes++
     }
-    const up_twit = await twitModel.findByIdAndUpdate(req.params.id, {number_of_likes, likeBy}, {new: true})
-
-
+    twit.number_of_likes = number_of_likes
+    twit.save()
     res.json({number_of_likes: up_twit.number_of_likes, liked})
 })
 
