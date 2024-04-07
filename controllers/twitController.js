@@ -3,9 +3,6 @@ const {twitModel} = require("../models/twitModel");
 const {decodeToken} = require("../helper/helper");
 const {likeTwitModel} = require("../models/likeTwitModel");
 const {commentTwitModel} = require("../models/commentTwitModel");
-const path = require("path");
-const multer = require('multer')
-const fs = require("fs");
 
 const index = expressAsyncHandler(async (req, res) => {
     const auth_id = decodeToken(req.header('Authorization')).id
@@ -21,16 +18,9 @@ const store = expressAsyncHandler(async (req, res) => {
 
 
     obj.byUser = user
-
-    console.log('======================================================')
-    console.log(obj)
-    console.log(req.file)
-    console.log('======================================================')
     if(req.file) {
         obj.image = req.file.path
     }
-
-    obj.likes = []
     obj.createdDate = new Date();
     const twit = new twitModel(req.body)
 
@@ -98,17 +88,16 @@ const storeReTwit = expressAsyncHandler(async (req, res) => {
 const likeTwit = expressAsyncHandler(async (req, res) => {
     const byUser = decodeToken(req.header('Authorization')).id
 
-    const twit = await twitModel.find({_id: req.params.id})
+    const twit = await twitModel.findOne({_id: req.params.id})
 
-    const my_param = {byUser: user.id, twitId: twit._id}
+    const my_param = {byUser: byUser, twitId: twit._id}
 
     const check_like = await likeTwitModel.find(my_param)
 
     let number_of_likes = twit.number_of_likes
     let liked = true
 
-
-    if (check_like.length) {
+    if (twit.likes.length) {
         number_of_likes--
         liked = false
         twit.likes.splice({byUser}, 1)
@@ -121,7 +110,7 @@ const likeTwit = expressAsyncHandler(async (req, res) => {
     }
     twit.number_of_likes = number_of_likes
     twit.save()
-    res.json({number_of_likes: up_twit.number_of_likes, liked})
+    res.json({number_of_likes, liked})
 })
 
 module.exports = {index, destroy, store, update, show, likeTwit, storeCommentTwit, getCommentTwit, storeReTwit}
