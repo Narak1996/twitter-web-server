@@ -49,4 +49,6 @@ async function generate_user(){
     console.log('Done user.')
     return
 }
+
+// generate_user()
 generate_twit()

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const {tr} = require("@faker-js/faker");
-
+const path = require('path')
 
 const likeSchema = new mongoose.Schema({
     byUser:{type:mongoose.Types.ObjectId,ref:'User'},
@@ -30,7 +30,13 @@ const twitSchema = new mongoose.Schema({
     number_of_comments:{type: Number,default:0},
     number_of_repost:{type: Number,default:0},
     createdDate:{type:Date,default: Date.now}
+},{toJSON:{virtuals:true}})
+
+
+twitSchema.virtual('ImageUrl').get(function() {
+    return path.resolve(this.image)
 })
+
 const twitModel = mongoose.model('Twit',twitSchema)
 
 module.exports = {twitSchema,twitModel}

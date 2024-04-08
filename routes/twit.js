@@ -2,16 +2,14 @@ const express = require('express')
 const router = express.Router()
 const {index, store, update, destroy,likeTwit,getCommentTwit,storeCommentTwit,show,storeReTwit} = require('../controllers/twitController')
 
-const path = require('path')
 const multer  = require('multer')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname,'../uploads/'))
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, (`${file.fieldname}-${uniqueSuffix}.png`))
+        cb(null, Date.now() + '-' + file.originalname);
     }
 })
 const upload = multer({storage:storage})

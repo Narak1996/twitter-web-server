@@ -15,6 +15,8 @@ var morgan = require('morgan')
 const {auth} = require("./middleware/auth");
 const {jwtStrategy} = require("./auth/jwtStrategy");
 const {userModel} = require("./models/userModel");
+const path = require('path')
+
 dbConnect().catch((err)=>{
     console.log(err)
 })
@@ -33,6 +35,9 @@ app.use(passport.session({
 app.use(morgan('combined'))
 app.use(cors())
 app.use(bodyParser.json())
+
+// file public
+app.use(express.static(path.join(__dirname + '../public')));
 app.use('/api/auth/',authRoute)
 app.use('/api/users/',passport.authenticate('jwt',{session:false}),userRoute)
 app.use('/api/twits/',passport.authenticate('jwt', { session: false }),twitRoute)
