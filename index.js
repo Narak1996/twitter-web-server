@@ -37,7 +37,12 @@ app.use(cors())
 app.use(bodyParser.json())
 
 // file public
-app.use(express.static(path.join(__dirname + '../public')));
+// app.use(express.static(path.join(__dirname + '../public')));
+app.use('/public', express.static(path.join(__dirname, 'public')))
+// app.use('/public', express.static('public'))
+
+
+
 app.use('/api/auth/',authRoute)
 app.use('/api/users/',passport.authenticate('jwt',{session:false}),userRoute)
 app.use('/api/twits/',passport.authenticate('jwt', { session: false }),twitRoute)

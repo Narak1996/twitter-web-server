@@ -33,9 +33,9 @@ const twitSchema = new mongoose.Schema({
 },{toJSON:{virtuals:true}})
 
 
-twitSchema.virtual('ImageUrl').get(function() {
-    return path.resolve(this.image)
-})
+// twitSchema.virtual('imageUrl').get(function() {
+//     return path.resolve(this.image)
+// })
 
 const twitModel = mongoose.model('Twit',twitSchema)
 

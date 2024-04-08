@@ -15,8 +15,7 @@ async function generate_twit() {
             const twit = new twitModel({
                 byUser:data._id,
                 text:faker.lorem.paragraph(),
-                image : faker.image.avatar(),
-                createdDate:faker.date.anytime()
+                image : faker.image.avatar()
             })
             await twit.save()
             twits_id.push(twit._id)

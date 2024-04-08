@@ -5,6 +5,7 @@ const {likeTwitModel} = require("../models/likeTwitModel");
 const {commentTwitModel} = require("../models/commentTwitModel");
 
 const index = expressAsyncHandler(async (req, res) => {
+    console.log(req.get('host'))
     const auth_id = decodeToken(req.header('Authorization')).id
     const twit = await twitModel.find()
         .populate({path: 'byUser', select: 'profile_img name username'})
@@ -19,7 +20,8 @@ const store = expressAsyncHandler(async (req, res) => {
 
     obj.byUser = user
     if(req.file) {
-        obj.image = req.file.path
+
+        obj.image =  req.protocol + '://' + req.get('host')+'/'+req.file.path
     }
     obj.createdDate = new Date();
     const twit = new twitModel(req.body)
